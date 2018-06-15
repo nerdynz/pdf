@@ -1,6 +1,7 @@
 package pdf
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -9,9 +10,12 @@ import (
 	"strings"
 )
 
-func Gen(url string, key string) ([]byte, error) {
+func Gen(url string, key string, marginless bool) (*bytes.Buffer, error) {
 	form := u.Values{}
 	form.Add("url", url)
+	if marginless {
+		form.Add("nomargin", "1")
+	}
 
 	client := http.Client{}
 	r, err := http.NewRequest("POST", "https://pdf.nerdy.co.nz/make", strings.NewReader(form.Encode()))
@@ -33,5 +37,5 @@ func Gen(url string, key string) ([]byte, error) {
 	if resp.StatusCode != 200 {
 		return nil, fmt.Errorf("request failed status code: %d", resp.StatusCode)
 	}
-	return b, err
+	return bytes.NewBuffer(b), err
 }
