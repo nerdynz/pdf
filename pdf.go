@@ -10,11 +10,17 @@ import (
 	"strings"
 )
 
-func Gen(url string, key string, marginless bool) (*bytes.Buffer, error) {
+func Gen(url string, key string, opts ...string) (*bytes.Buffer, error) {
 	form := u.Values{}
 	form.Add("url", url)
-	if marginless {
-		form.Add("nomargin", "1")
+
+	for _, opt := range opts {
+		if opt == "nomargin" {
+			form.Add("nomargin", "1")
+		}
+		if opt == "landscape" {
+			form.Add("orientation", "landscape")
+		}
 	}
 
 	client := http.Client{}
