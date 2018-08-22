@@ -10,14 +10,29 @@ import (
 	"strings"
 )
 
-func Gen(url string, key string, opts ...string) (*bytes.Buffer, error) {
+// Gen generates a pdf
+// Deprecated: use Create instead
+func Gen(url string, key string, isMarginless bool) (*bytes.Buffer, error) {
+	marginless := ""
+	if isMarginless {
+		marginless = "marginless"
+	}
+	return Create(url, key, marginless)
+}
+
+func Create(urlOrText string, key string, opts ...string) (*bytes.Buffer, error) {
 	form := u.Values{}
-	form.Add("url", url)
+	form.Add("url", urlOrText)
 
 	for _, opt := range opts {
+		if opt == "marginless" {
+			form.Add("nomargin", "1")
+		}
+
 		if opt == "nomargin" {
 			form.Add("nomargin", "1")
 		}
+
 		if opt == "landscape" {
 			form.Add("orientation", "landscape")
 		}
