@@ -56,7 +56,7 @@ func Create(urlOrText string, key string, opts ...string) (*bytes.Buffer, error)
 		return nil, errors.New("request failed" + err.Error())
 	}
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("request failed status code: %d", resp.StatusCode)
+		return nil, fmt.Errorf("Request failed status code: %d %s", resp.StatusCode, string(b))
 	}
 	return bytes.NewBuffer(b), err
 }
