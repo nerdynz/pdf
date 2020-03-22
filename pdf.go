@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	u "net/url"
+	"os"
 	"strings"
 )
 
@@ -39,7 +40,11 @@ func Create(urlOrText string, key string, opts ...string) (*bytes.Buffer, error)
 	}
 
 	client := http.Client{}
-	r, err := http.NewRequest("POST", "https://pdf.nerdy.co.nz/make", strings.NewReader(form.Encode()))
+	pdfURL := os.Getenv("PDF_URL") + ""
+	if pdfURL == "" {
+		pdfURL = "https://pdf.nerdy.co.nz/make"
+	}
+	r, err := http.NewRequest("POST", pdfURL, strings.NewReader(form.Encode()))
 	// r, err := http.NewRequest("POST", "http://localhost:5000/api/v1/notes/parse", bytes.NewBufferString(str))
 	if err != nil {
 		return nil, errors.New("Couldn't make the request" + err.Error())
